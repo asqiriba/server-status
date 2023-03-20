@@ -9,15 +9,18 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 class State(pc.State):
-    status: int = 0
+    status: str = "decrease"
+    status_code: int = 0
 
     def api_status(self):
         logging.debug("Pinging server...")
-        self.status = ping_server("https://api.knowcorp.com:8000/health/")
+        self.status, self.status_code = ping_server(
+            "https://api.knowcorp.com:8000/health/"
+        )
 
 
 def index() -> pc.Component:
-    api_status2 = set_status("API Gateway", "increase", "decrease")
+    api_status = set_status("API Gateway", State.status, "decrease")
     orion_status = set_status("Orion Service", "decrease", "decrease")
     nebula_status = set_status("Orion Nebula Service", "increase", "increase")
     ocr_status = set_status("OCR Service", "increase", "decrease")
@@ -34,7 +37,7 @@ def index() -> pc.Component:
                 size="sm",
                 on_click=State.api_status,
             ),
-            api_status2,
+            api_status,
             orion_status,
             nebula_status,
             ocr_status,
