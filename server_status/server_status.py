@@ -68,7 +68,7 @@ app = pc.App(state=State)
 
 app.add_page(
     index,
-    title=config.app_name,
+    title="Server Status",
     description="A simple server status page for my fellow devs",
     route="/",
 )
